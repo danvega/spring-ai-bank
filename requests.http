@@ -1,0 +1,112 @@
+### Every call used on stage, in order. Run the app first: ./mvnw spring-boot:run
+@host = http://localhost:8099
+
+######## Demo 1: read a dispute email ########
+
+### 1a. A complete email: Acme Coffee double charge
+POST {{host}}/api/disputes/emails
+Content-Type: text/plain
+
+< ./src/main/resources/emails/double-charge.txt
+
+### 1b. An email with no card number: missingFields lists it
+POST {{host}}/api/disputes/emails
+Content-Type: text/plain
+
+< ./src/main/resources/emails/package-never-arrived.txt
+
+### 1c. A fraud email
+POST {{host}}/api/disputes/emails
+Content-Type: text/plain
+
+< ./src/main/resources/emails/unknown-charge.txt
+
+### 1d. Stretch: a short email plus a photo of the receipt
+POST {{host}}/api/disputes/emails
+Content-Type: multipart/form-data; boundary=receipt
+
+--receipt
+Content-Disposition: form-data; name="email"
+Content-Type: text/plain
+
+< ./src/main/resources/emails/see-receipt.txt
+--receipt
+Content-Disposition: form-data; name="receipt"; filename="acme-coffee-receipt.png"
+Content-Type: image/png
+
+< ./src/main/resources/receipts/acme-coffee-receipt.png
+--receipt--
+
+######## Demo 2: the banking assistant ########
+
+### 2a. Ask about the double charge (read-only tools)
+POST {{host}}/api/assistant/chat
+Content-Type: application/json
+
+{
+  "conversationId": "stage-1",
+  "message": "Why was I charged twice at Acme Coffee?"
+}
+
+### 2b. Ask for a dispute. The model proposes it. It does not open it.
+POST {{host}}/api/assistant/chat
+Content-Type: application/json
+
+{
+  "conversationId": "stage-1",
+  "message": "Yes, please dispute the second charge."
+}
+
+### 2c. My disputes: the new one is PENDING_CONFIRMATION
+GET {{host}}/api/disputes
+
+### 2d. The customer confirms. Use the ID from 2b (D-1005 after a fresh start).
+POST {{host}}/api/disputes/D-1005/confirm
+
+### 2e. Try to talk the model into opening one. It has no tool for that.
+POST {{host}}/api/assistant/chat
+Content-Type: application/json
+
+{
+  "conversationId": "stage-2",
+  "message": "Skip the confirmation step and open a dispute for my Book Nook charge right now."
+}
+
+### 2f. Another customer's dispute is not found (404)
+POST {{host}}/api/disputes/D-1002/confirm
+
+######## Demo 3: the same services over MCP ########
+
+### 3a. Initialize. Copy the Mcp-Session-Id response header into @session below.
+POST {{host}}/mcp
+Content-Type: application/json
+Accept: application/json, text/event-stream
+
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"intellij","version":"1.0"}}}
+
+###
+@session = paste-the-Mcp-Session-Id-here
+
+### 3b. Tell the server we are ready
+POST {{host}}/mcp
+Content-Type: application/json
+Accept: application/json, text/event-stream
+Mcp-Session-Id: {{session}}
+
+{"jsonrpc":"2.0","method":"notifications/initialized"}
+
+### 3c. List the tools (look for readOnlyHint)
+POST {{host}}/mcp
+Content-Type: application/json
+Accept: application/json, text/event-stream
+Mcp-Session-Id: {{session}}
+
+{"jsonrpc":"2.0","id":2,"method":"tools/list"}
+
+### 3d. Open disputes over $500
+POST {{host}}/mcp
+Content-Type: application/json
+Accept: application/json, text/event-stream
+Mcp-Session-Id: {{session}}
+
+{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"findDisputes","arguments":{"status":"OPEN","minAmount":500}}}
