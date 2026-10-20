@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: bank
+  ai:
+    # OpenAI through the Responses API (new in Spring AI 2.1.0-M1).
+    # GPT-6 Astra and GPT-6.1 Sol need Responses for tool calling.
+    # The app starts without a key, so the non-LLM parts still work.
+    openai:
+      api-key: ${OPENAI_API_KEY:not-set}
+      chat:
+        api: responses
+      responses:
+        # gpt-6.1-sol (default) or gpt-6-astra
+        model: ${OPENAI_MODEL:gpt-6.1-sol}
+        # low keeps live demos fast. 6.1 Sol defaults to medium.
+        reasoning-effort: low
+
+    # Tool call limits per turn (new in Spring AI 2.0.1). Defaults: 40 per tool, 150 in total.
+    tools:
+      limits:
+        max-calls-per-tool-default: 5
+        max-calls-per-tool:
+          # Brackets keep the camel-case tool name as the map key
+          "[proposeDispute]": 1
+        max-total-tool-calls: 10
+        # Tell the model it hit the limit, instead of failing the request
+        on-limit-exceeded: return-error-response
+
+    # MCP server. Any MCP client can use the @McpTool methods on our services.
+    mcp:
+      server:
+        name: bank
+        version: 1.0.0
+        instructions: "Look up card transactions and disputes for a bank's back office. All data is made up."
+        # Required. Without it you get the old SSE server, and /mcp returns 404.
+        protocol: STREAMABLE
+
+# Port 8099 (8080 is often taken). Bind to localhost only: this demo has no auth.
+server:
+  port: 8099
+  address: 127.0.0.1

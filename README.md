@@ -209,14 +209,21 @@ chatClient.prompt()
         .content();
 ```
 
-**Type 3:** the limits in `application.properties`.
+**Type 3:** the limits in `application.yaml`, under the existing `spring.ai`.
 
-```properties
-spring.ai.tools.limits.max-calls-per-tool-default=5
-spring.ai.tools.limits.max-calls-per-tool[proposeDispute]=1
-spring.ai.tools.limits.max-total-tool-calls=10
-spring.ai.tools.limits.on-limit-exceeded=return-error-response
+```yaml
+spring:
+  ai:
+    tools:
+      limits:
+        max-calls-per-tool-default: 5
+        max-calls-per-tool:
+          "[proposeDispute]": 1
+        max-total-tool-calls: 10
+        on-limit-exceeded: return-error-response
 ```
+
+The brackets keep `proposeDispute` as the map key. Without them, Spring Boot changes the camel-case key and the limit doesn't apply.
 
 **Run:**
 
@@ -279,13 +286,17 @@ public DisputeList findDisputes(DisputeStatus status,
 
 Do the same for `recentTransactions` and `findDuplicateCharges` (read only), and for `propose` (`name = "proposeDispute"`, `destructiveHint = false`). See `demo-3-done`.
 
-**Type 3:** `application.properties`.
+**Type 3:** `application.yaml`, under the existing `spring.ai`.
 
-```properties
-spring.ai.mcp.server.name=bank
-spring.ai.mcp.server.version=1.0.0
-spring.ai.mcp.server.instructions=Look up card transactions and disputes for a bank's back office. All data is made up.
-spring.ai.mcp.server.protocol=STREAMABLE
+```yaml
+spring:
+  ai:
+    mcp:
+      server:
+        name: bank
+        version: 1.0.0
+        instructions: "Look up card transactions and disputes for a bank's back office. All data is made up."
+        protocol: STREAMABLE
 ```
 
 Optional beat: start once without the `protocol` line. `curl -i -X POST localhost:8099/mcp` gives 404, because you got the old SSE server. Add the line, restart, and it works.
