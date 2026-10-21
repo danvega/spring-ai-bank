@@ -15,16 +15,16 @@ Content-Type: text/plain
 
 ### 2c. Optional: a short email plus a photo of the receipt (a media part)
 POST {{host}}/api/disputes/emails
-Content-Type: multipart/form-data; boundary=receipt
+Content-Type: multipart/form-data; boundary=BOUNDARY
 
---receipt
+--BOUNDARY
 Content-Disposition: form-data; name="email"
 Content-Type: text/plain
 
 < ../src/main/resources/emails/see-receipt.txt
---receipt
+--BOUNDARY
 Content-Disposition: form-data; name="receipt"; filename="acme-coffee-receipt.png"
 Content-Type: image/png
 
 < ../src/main/resources/receipts/acme-coffee-receipt.png
---receipt--
+--BOUNDARY--
