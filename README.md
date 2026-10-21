@@ -54,11 +54,11 @@ Each branch adds one demo. `main` has them all.
 
 | Branch | Adds |
 |---|---|
-| `01-assistant` | Tool calling. It starts on Chat Completions, so tool calling fails until you turn on the Responses API. |
-| `02-structured-output` | Read a dispute email |
-| `03-memory` | Short-term and long-term memory |
-| `04-mcp` | The bank's services over MCP |
-| `main` | Route to the right model with Jev |
+| `2a-assistant` | Tool calling. It starts on Chat Completions, so tool calling fails until you turn on the Responses API. |
+| `2b-structured-output` | Read a dispute email |
+| `2c-memory` | Short-term and long-term memory |
+| `3-mcp` | The bank's services over MCP |
+| `4-jev` | Route to the right model with Jev (same as `main`) |
 
 ## Where to look
 
