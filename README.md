@@ -40,7 +40,7 @@ The [http](http) folder has one IntelliJ HTTP client file per demo, numbered in 
 | Read a dispute email | Structured output: an email in, a typed `DisputeCase` record out | [email](src/main/java/dev/danvega/bank/email/README.md) |
 | A banking assistant | Tool calling and the tool loop on existing services. The model proposes a dispute, and the customer confirms it. | [assistant](src/main/java/dev/danvega/bank/assistant/README.md) |
 | Memory | Short-term memory (chat memory, the window, the repository), then long-term memory as Markdown files | [memory](src/main/java/dev/danvega/bank/memory/README.md) |
-| Your bank over MCP | `@McpTool` on the bank's services, used from any MCP client | see below |
+| Your bank over MCP | A small set of `@McpTool` tools designed for agents, used from any MCP client | see below |
 
 A first call to try:
 
@@ -53,13 +53,13 @@ The answer names two $18.75 charges at Acme Coffee on October 5. The app log sho
 
 ### MCP
 
-`TransactionService` and `DisputeService` are also an MCP server at `http://localhost:8099/mcp` (Streamable HTTP). Their methods carry `@McpTool`, and read tools set `readOnlyHint`. Connect from Claude Code:
+`BankMcpTools` exposes four tools designed for a back-office agent, on top of the bank's services. The app serves them at `http://localhost:8099/mcp` (Streamable HTTP). Read tools set `readOnlyHint`. Connect from Claude Code:
 
 ```bash
 claude mcp add --transport http bank http://localhost:8099/mcp
 ```
 
-Then ask "Show open disputes over $500." Or use MCP Inspector, or the raw calls in [http/4-mcp.http](http/4-mcp.http):
+Then ask "Show open disputes over $500." Or use MCP Inspector, or the raw calls in [http/3-mcp.http](http/3-mcp.http):
 
 ```bash
 npx -y @modelcontextprotocol/inspector@2.10.1
@@ -71,11 +71,11 @@ Each branch adds one demo. `main` has them all.
 
 | Branch | Adds |
 |---|---|
-| `01-assistant` | Tool calling. It starts on Chat Completions, so tool calling fails until you turn on the Responses API. |
-| `02-structured-output` | Read a dispute email |
-| `03-memory` | Short-term and long-term memory |
-| `04-mcp` | The bank's services over MCP |
-| `main` | Route to the right model with Jev |
+| `2a-assistant` | Tool calling. It starts on Chat Completions, so tool calling fails until you turn on the Responses API. |
+| `2b-structured-output` | Read a dispute email |
+| `2c-memory` | Short-term and long-term memory |
+| `3-mcp` | The bank's services over MCP |
+| `4-jev` | Route to the right model with Jev (same as `main`) |
 
 ## Where to look
 

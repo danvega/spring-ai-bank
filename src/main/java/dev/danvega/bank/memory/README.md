@@ -23,7 +23,7 @@ Short-term memory is a transcript. Long-term memory is notes. Storing short-term
 
 Add a starter like `spring-ai-starter-model-chat-memory-repository-jdbc` and the JDBC repository replaces the in-memory one. No code changes. JDBC, MongoDB, Redis, Cassandra and Neo4j are supported.
 
-Try it with S1 to S5 in [http/3-memory.http](../../../../../../../http/3-memory.http): it remembers within a conversation, `GET /api/memory/conversations/s1` shows what the repository holds, and a new conversation ID starts empty.
+Try it with S1 to S5 in [http/2c-memory.http](../../../../../../../http/2c-memory.http): it remembers within a conversation, `GET /api/memory/conversations/s1` shows what the repository holds, and a new conversation ID starts empty.
 
 ## Step 2: long-term memory
 
@@ -40,7 +40,7 @@ The two lines that matter:
 
 Our code picks the folder, never the model. Unknown customer IDs get a 404, and the tools refuse any path outside the folder. `DELETE /api/memory/customers/C-100` forgets a customer: their folder and every conversation.
 
-Try it with L1 to L5 in [http/3-memory.http](../../../../../../../http/3-memory.http). Keep the `memories/` folder open and watch the files appear.
+Try it with L1 to L5 in [http/2c-memory.http](../../../../../../../http/2c-memory.http). Keep the `memories/` folder open and watch the files appear.
 
 ## Good to know
 
