@@ -53,10 +53,7 @@ class AssistantController {
         return new ChatReply(answer);
     }
 
-    record ChatRequest(String conversationId, String message) {
-    }
-
-    record ChatReply(String answer) {
-    }
+    record ChatRequest(String conversationId, String message) {}
+    record ChatReply(String answer) {}
 
 }
