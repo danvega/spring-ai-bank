@@ -9,6 +9,27 @@ This demo puts a chat assistant on services the bank already has. The model read
 - [CustomerTools.java](CustomerTools.java): three `@Tool` methods for one customer. `recentTransactions` and `findDuplicateCharges` only read. `proposeDispute` prepares a dispute but does not open it. The customer ID comes from our code, so the model can't ask about anyone else. There is no confirm tool.
 - [AssistantController.java](AssistantController.java): attaches the tools to each request with `.tools(...)`. There's no loop in our code. Spring AI runs it.
 
+## Tools and the loop, from scratch
+
+A tool gives the model one of two things:
+
+- **Context:** data it doesn't have, like `recentTransactions` and `findDuplicateCharges`.
+- **An action:** a change in your app, like `proposeDispute`. For actions that matter, a person confirms.
+
+The model never runs a tool. It asks, and your code runs it. Without a framework, you write that back and forth yourself:
+
+```java
+var reply = model.call(prompt);
+while (reply.wantsTool()) {             // the model asked for a tool
+    var result = run(reply.tool());     // you run it
+    prompt.add(reply, result);          // you send the result back
+    reply = model.call(prompt);         // and ask again
+}
+return reply.text();
+```
+
+The real version also needs a JSON schema for every tool, a way to map a tool name to your method, support for several tool calls in one reply, and a limit so it can't loop forever. Every framework hides this loop somewhere. In Spring AI, `@Tool` builds the schema, your method is the mapping, and `ToolCallingAdvisor` runs the loop.
+
 ## The tool loop in Spring AI 2
 
 In 2.0, the loop moved out of each model and into the advisor chain, as `ToolCallingAdvisor`. It's registered for you.
