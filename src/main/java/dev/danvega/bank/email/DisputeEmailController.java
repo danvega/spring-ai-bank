@@ -36,7 +36,6 @@ class DisputeEmailController {
                         .validateSchema());
     }
 
-    // Stretch: the same email, plus a photo of the receipt
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     DisputeCase readWithReceipt(@RequestPart String email, @RequestPart MultipartFile receipt) {
         var imageType = MimeType.valueOf(receipt.getContentType());

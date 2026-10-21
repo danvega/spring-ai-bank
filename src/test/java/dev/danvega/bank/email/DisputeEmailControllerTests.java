@@ -23,10 +23,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Demo 1 without an API key. The fake plays the model, and we check both sides:
- * what Spring AI sent to the Responses API, and the typed record we got back.
- */
 @SpringBootTest
 @AutoConfigureMockMvc
 class DisputeEmailControllerTests {
@@ -73,7 +69,7 @@ class DisputeEmailControllerTests {
                 .andExpect(status().isOk());
 
         JsonNode request = openAi.lastRequest();
-        assertThat(request.get("model").asString()).isEqualTo("gpt-6.1-sol");
+        assertThat(request.get("model").asString()).isEqualTo("gpt-6-astra");
         assertThat(request.at("/reasoning/effort").asString()).isEqualTo("low");
         assertThat(request.at("/text/format/type").asString()).isEqualTo("json_schema");
         assertThat(request.at("/text/format/strict").asBoolean()).isTrue();
@@ -101,7 +97,6 @@ class DisputeEmailControllerTests {
 
     @Test
     void validateSchemaRetriesWhenTheModelBreaksTheSchema() throws Exception {
-        // First answer uses a reason code that does not exist, then the model fixes it
         openAi.replyWithText(DOUBLE_CHARGE_CASE.replace("DUPLICATE_CHARGE", "CHARGED_TWICE"))
                 .replyWithText(DOUBLE_CHARGE_CASE);
 

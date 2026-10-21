@@ -10,11 +10,7 @@ import dev.danvega.bank.transaction.TransactionService;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 
-/**
- * The tools for one signed-in customer. The customer ID is set here, not by the model,
- * so the model can't look at anyone else's account.
- * There is no tool to confirm a dispute. Only the customer can do that.
- */
+// The customer ID comes from our code, not the model. No confirm tool.
 class CustomerTools {
 
     private final String customerId;

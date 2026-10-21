@@ -11,9 +11,6 @@ import dev.danvega.bank.dispute.DisputeStatus;
 import dev.danvega.bank.dispute.ReasonCode;
 import dev.danvega.bank.transaction.Transaction;
 
-/**
- * Our pretend database. Every name, card and amount is made up.
- */
 public final class BankData {
 
     private BankData() {
@@ -36,7 +33,6 @@ public final class BankData {
 
     public static List<Transaction> transactions() {
         return List.of(
-                // Maria: note the double charge at Acme Coffee on October 5
                 tx("T-1001", "C-100", "4242", "Fresh Market", "84.12", "2026-09-28"),
                 tx("T-1002", "C-100", "4242", "City Transit", "2.75", "2026-09-30"),
                 tx("T-1003", "C-100", "1881", "Streamly", "15.99", "2026-10-01"),
@@ -47,12 +43,10 @@ public final class BankData {
                 tx("T-1008", "C-100", "1881", "Online Electronics", "649.00", "2026-10-07"),
                 tx("T-1009", "C-100", "4242", "Concert Hall", "310.00", "2026-08-15"),
 
-                // James
                 tx("T-2001", "C-200", "7310", "Hotel Marlow", "780.00", "2026-08-22"),
                 tx("T-2002", "C-200", "7310", "Acme Coffee", "4.25", "2026-10-02"),
                 tx("T-2003", "C-200", "7310", "Skyline Airlines", "1240.00", "2026-09-12"),
 
-                // Priya
                 tx("T-3001", "C-300", "5566", "Fresh Market", "61.30", "2026-09-29"),
                 tx("T-3002", "C-300", "5566", "Luxe Furniture", "2150.00", "2026-09-30"),
                 tx("T-3003", "C-300", "5566", "Pet Palace", "45.10", "2026-10-02"),

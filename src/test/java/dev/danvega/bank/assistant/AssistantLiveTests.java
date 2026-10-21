@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/** The live script for demo 2, against the real model. Runs only when OPENAI_API_KEY is set. */
 @SpringBootTest
 @AutoConfigureMockMvc
 @EnabledIfEnvironmentVariable(named = "OPENAI_API_KEY", matches = ".+")
@@ -30,16 +29,14 @@ class AssistantLiveTests {
     void explainsTheDoubleChargeThenProposesButDoesNotOpen() throws Exception {
         chat("Why was I charged twice at Acme Coffee?")
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.answer").value(containsStringIgnoringCase("acme")))
-                .andExpect(jsonPath("$.awaitingConfirmation").isEmpty());
+                .andExpect(jsonPath("$.answer").value(containsStringIgnoringCase("acme")));
+        mvc.perform(get("/api/disputes")).andExpect(jsonPath("$.disputes[?(@.status == 'PENDING_CONFIRMATION')]").isEmpty());
 
         chat("Yes, please dispute the second charge.")
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.awaitingConfirmation[0].transactionId").exists())
-                .andExpect(jsonPath("$.awaitingConfirmation[0].status").value("PENDING_CONFIRMATION"));
+                .andExpect(status().isOk());
 
-        // Nothing of Maria's was opened by the model
         mvc.perform(get("/api/disputes"))
+                .andExpect(jsonPath("$.disputes[?(@.status == 'PENDING_CONFIRMATION')]").isNotEmpty())
                 .andExpect(jsonPath("$.disputes[?(@.status == 'OPEN')]").isEmpty());
     }
 

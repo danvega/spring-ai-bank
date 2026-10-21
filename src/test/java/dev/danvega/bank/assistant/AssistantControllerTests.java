@@ -23,16 +23,13 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Demo 2 without an API key. The fake plays the model and asks for tool calls.
- * Spring AI's ToolCallingAdvisor runs our real tools against the in-memory bank.
- */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(OutputCaptureExtension.class)
@@ -61,10 +58,9 @@ class AssistantControllerTests {
 
         chat("c1", "Why was I charged twice at Acme Coffee?")
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.answer").value(containsString("charged $18.75 twice")))
-                .andExpect(jsonPath("$.awaitingConfirmation").isEmpty());
+                .andExpect(jsonPath("$.answer").value(containsString("charged $18.75 twice")));
+        mvc.perform(get("/api/disputes")).andExpect(jsonPath("$.disputes[?(@.status == 'PENDING_CONFIRMATION')]").isEmpty());
 
-        // The tool result went back to the model in the second request
         String secondInput = openAi.lastRequest().get("input").toString();
         assertThat(secondInput).contains("function_call_output").contains("T-1005").contains("T-1006");
     }
@@ -76,7 +72,7 @@ class AssistantControllerTests {
         chat("c1", "Hi").andExpect(status().isOk());
 
         JsonNode request = openAi.lastRequest();
-        assertThat(request.get("model").asString()).isEqualTo("gpt-6.1-sol");
+        assertThat(request.get("model").asString()).isEqualTo("gpt-6-astra");
         assertThat(request.get("tools").valueStream().map(tool -> tool.get("name").asString()))
                 .containsExactlyInAnyOrder("recentTransactions", "findDuplicateCharges", "proposeDispute");
     }
@@ -90,12 +86,11 @@ class AssistantControllerTests {
                 .replyWithText("I prepared dispute D-1005. Please confirm it in the app.");
 
         chat("c1", "Please dispute the second Acme Coffee charge")
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.awaitingConfirmation[0].id").value("D-1005"))
-                .andExpect(jsonPath("$.awaitingConfirmation[0].transactionId").value("T-1006"))
-                .andExpect(jsonPath("$.awaitingConfirmation[0].status").value("PENDING_CONFIRMATION"));
+                .andExpect(status().isOk());
+        mvc.perform(get("/api/disputes"))
+                .andExpect(jsonPath("$.disputes[?(@.id == 'D-1005')].transactionId").value("T-1006"))
+                .andExpect(jsonPath("$.disputes[?(@.id == 'D-1005')].status").value("PENDING_CONFIRMATION"));
 
-        // The separate, explicit step that only the customer takes
         mvc.perform(post("/api/disputes/D-1005/confirm"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("OPEN"));
@@ -122,8 +117,8 @@ class AssistantControllerTests {
                 .replyWithText("I could only prepare one dispute.");
 
         chat("c1", "Dispute both Acme Coffee charges")
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.awaitingConfirmation.length()").value(1));
+                .andExpect(status().isOk());
+        mvc.perform(get("/api/disputes")).andExpect(jsonPath("$.disputes[?(@.status == 'PENDING_CONFIRMATION')]", hasSize(1)));
 
         assertThat(openAi.lastRequest().get("input").toString())
                 .contains("Tool call limit (1) exceeded for tool 'proposeDispute'");
@@ -149,6 +144,21 @@ class AssistantControllerTests {
         chat("c1", "Show my recent transactions").andExpect(status().isOk());
 
         assertThat(output).contains("execute_tool recentTransactions");
+    }
+
+    @Test
+    void logsEachTripToTheModelInsideTheLoop(CapturedOutput output) throws Exception {
+        openAi.replyWithToolCalls(ToolCall.of("findDuplicateCharges", "{}")).replyWithText("Charged twice.");
+
+        chat("c1", "Why was I charged twice at Acme Coffee?").andExpect(status().isOk());
+
+        String log = output.getOut();
+        int asks = log.indexOf("model call -> asks for findDuplicateCharges");
+        int tool = log.indexOf("execute_tool findDuplicateCharges");
+        int answers = log.indexOf("model call -> answers with text");
+        assertThat(asks).isNotNegative();
+        assertThat(tool).isGreaterThan(asks);
+        assertThat(answers).isGreaterThan(tool);
     }
 
     private ResultActions chat(String conversationId, String message) throws Exception {

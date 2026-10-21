@@ -1,0 +1,78 @@
+### Demo 3: short-term memory, then long-term memory
+@host = http://localhost:8099
+
+######## Memory demo, step 1: short-term memory ########
+# One conversation. The advisor replays its recent messages on every call.
+
+### S1. Tell it your name
+POST {{host}}/api/memory/conversations/s1/chat
+Content-Type: application/json
+
+{
+  "message": "Hi, my name is Maria. Answer in one short sentence."
+}
+
+### S2. Ask for it back. It remembers, because the advisor replays S1.
+POST {{host}}/api/memory/conversations/s1/chat
+Content-Type: application/json
+
+{
+  "message": "What's my name?"
+}
+
+### S3. Look inside the repository: 4 messages (2 user, 2 assistant)
+GET {{host}}/api/memory/conversations/s1
+
+### S4. A new conversation ID starts empty. It has no idea.
+POST {{host}}/api/memory/conversations/s2/chat
+Content-Type: application/json
+
+{
+  "message": "What's my name?"
+}
+
+### S5. Restart the app, then look again: empty. InMemoryChatMemoryRepository is a Map in the JVM.
+GET {{host}}/api/memory/conversations/s1
+
+######## Memory demo, step 2: long-term memory ########
+# Start clean: rm -rf memories. Long-term memory is files on disk, so a restart keeps it.
+# Keep the memories/ folder open in the IDE. The files appear on L1.
+
+### L1. Conversation 1: Maria tells us about her trip. Watch memories/C-100/ appear
+POST {{host}}/api/memory/customers/C-100/chat
+Content-Type: application/json
+
+{
+  "conversationId": "trip",
+  "message": "I'm traveling to Portugal next week. Please text me about anything, don't email."
+}
+
+### L2. Conversation 2, new conversation ID: the model reads her files and recalls Portugal and texting
+POST {{host}}/api/memory/customers/C-100/chat
+Content-Type: application/json
+
+{
+  "conversationId": "card",
+  "message": "Will my card work on my trip?"
+}
+
+### L3. Another customer, same question: James's tools only reach memories/C-200/
+POST {{host}}/api/memory/customers/C-200/chat
+Content-Type: application/json
+
+{
+  "conversationId": "card",
+  "message": "Will my card work on my trip?"
+}
+
+### L4. Forget Maria: her folder and her conversations are deleted
+DELETE {{host}}/api/memory/customers/C-100
+
+### L5. Ask again in conversation 2: nothing is recalled
+POST {{host}}/api/memory/customers/C-100/chat
+Content-Type: application/json
+
+{
+  "conversationId": "card",
+  "message": "Will my card work on my trip?"
+}

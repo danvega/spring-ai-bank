@@ -19,7 +19,7 @@ class DisputeServiceTests {
         assertThat(dispute.id()).isEqualTo("D-1005");
         assertThat(dispute.status()).isEqualTo(DisputeStatus.PENDING_CONFIRMATION);
         assertThat(dispute.amount()).isEqualByComparingTo("18.75");
-        assertThat(service.awaitingConfirmation("C-100")).containsExactly(dispute);
+        assertThat(service.disputesFor("C-100").disputes()).contains(dispute);
     }
 
     @Test
@@ -29,7 +29,8 @@ class DisputeServiceTests {
         Dispute opened = service.confirm("C-100", proposed.id());
 
         assertThat(opened.status()).isEqualTo(DisputeStatus.OPEN);
-        assertThat(service.awaitingConfirmation("C-100")).isEmpty();
+        assertThat(service.disputesFor("C-100").disputes()).extracting(Dispute::status)
+                .doesNotContain(DisputeStatus.PENDING_CONFIRMATION);
     }
 
     @Test

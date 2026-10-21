@@ -1,10 +1,8 @@
 package dev.danvega.bank.assistant;
 
-import java.util.List;
-
 import dev.danvega.bank.customer.CurrentCustomer;
-import dev.danvega.bank.dispute.Dispute;
 import dev.danvega.bank.dispute.DisputeService;
+import dev.danvega.bank.observability.ModelCallLogger;
 import dev.danvega.bank.transaction.TransactionService;
 
 import org.springframework.ai.chat.client.ChatClient;
@@ -33,7 +31,7 @@ class AssistantController {
                         You can propose a dispute, but you can never open one.
                         After you propose one, give its ID and ask the customer to confirm it in the app.
                         """)
-                .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
+                .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build(), new ModelCallLogger())
                 .build();
         this.transactionService = transactionService;
         this.disputeService = disputeService;
@@ -52,13 +50,13 @@ class AssistantController {
                 .call()
                 .content();
 
-        return new ChatReply(answer, disputeService.awaitingConfirmation(customerId));
+        return new ChatReply(answer);
     }
 
     record ChatRequest(String conversationId, String message) {
     }
 
-    record ChatReply(String answer, List<Dispute> awaitingConfirmation) {
+    record ChatReply(String answer) {
     }
 
 }

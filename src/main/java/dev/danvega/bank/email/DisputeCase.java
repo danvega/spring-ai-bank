@@ -7,10 +7,7 @@ import java.util.List;
 import dev.danvega.bank.dispute.ReasonCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-/**
- * What the dispute team needs from a customer's email.
- * OpenAI strict mode wants every field present, so a missing value is null (not left out).
- */
+// Strict mode wants every field, so a missing value is null.
 public record DisputeCase(
         @Schema(nullable = true, description = "Last four digits of the card") String cardLastFour,
         @Schema(nullable = true) String merchant,

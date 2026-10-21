@@ -10,10 +10,7 @@ import org.springframework.ai.converter.BeanOutputConverter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * OpenAI strict mode (always on for structured output through the Responses API)
- * rejects a schema unless every property is required and no extra properties are allowed.
- */
+// OpenAI strict mode rejects a schema unless every property is required and no extra properties are allowed.
 class DisputeCaseSchemaTests {
 
     private final JsonNode schema = JsonMapper.builder().build()

@@ -20,11 +20,6 @@ import tools.jackson.databind.node.ObjectNode;
 
 import org.springframework.test.context.DynamicPropertyRegistry;
 
-/**
- * A stand-in for the OpenAI Responses API ({@code POST /v1/responses}).
- * Tests queue the replies the "model" gives, then check the requests Spring AI sent.
- * It lets every test run without an API key, through the real OpenAiResponsesChatModel.
- */
 public final class FakeOpenAi {
 
     private static final FakeOpenAi INSTANCE = new FakeOpenAi();
@@ -50,7 +45,6 @@ public final class FakeOpenAi {
         return INSTANCE;
     }
 
-    /** Points Spring AI at this fake instead of api.openai.com. */
     public static void register(DynamicPropertyRegistry registry) {
         registry.add("spring.ai.openai.base-url", () -> "http://127.0.0.1:" + INSTANCE.port() + "/v1");
         registry.add("spring.ai.openai.api-key", () -> "test-key");
@@ -62,7 +56,6 @@ public final class FakeOpenAi {
         requests.clear();
     }
 
-    /** The model answers with text (for structured output, that text is JSON). */
     public FakeOpenAi replyWithText(String text) {
         ObjectNode message = json.createObjectNode()
                 .put("type", "message")
@@ -76,7 +69,6 @@ public final class FakeOpenAi {
         return reply(message);
     }
 
-    /** The model asks Spring AI to run one or more tools. */
     public FakeOpenAi replyWithToolCalls(ToolCall... calls) {
         ObjectNode[] items = new ObjectNode[calls.length];
         for (int i = 0; i < calls.length; i++) {

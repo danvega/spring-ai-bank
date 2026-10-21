@@ -1,0 +1,26 @@
+### Demo 1: a banking assistant (tool calling). Watch the console for the tool loop.
+@host = http://localhost:8099
+
+### 1a. Ask about the double charge. The model calls a read-only tool.
+POST {{host}}/api/assistant/chat
+Content-Type: application/json
+
+{
+  "conversationId": "stage-1",
+  "message": "Why was I charged twice at Acme Coffee?"
+}
+
+### 1b. Ask for a dispute. The model proposes it. It can't open it.
+POST {{host}}/api/assistant/chat
+Content-Type: application/json
+
+{
+  "conversationId": "stage-1",
+  "message": "Yes, please dispute the second charge."
+}
+
+### 1c. My disputes: the new one is PENDING_CONFIRMATION
+GET {{host}}/api/disputes
+
+### 1d. The customer confirms it (D-1005 after a fresh start)
+POST {{host}}/api/disputes/D-1005/confirm

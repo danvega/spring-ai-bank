@@ -29,10 +29,6 @@ public class DisputeService {
         BankData.disputes().forEach(d -> disputes.put(d.id(), d));
     }
 
-    /**
-     * Prepares a dispute. It stays pending until the customer confirms it.
-     * Only one dispute per transaction: asking again returns the existing one.
-     */
     @McpTool(name = "proposeDispute",
             description = "Prepare a dispute. It stays pending until the customer confirms it in the app.",
             annotations = @McpTool.McpAnnotations(destructiveHint = false))
@@ -56,7 +52,6 @@ public class DisputeService {
         return dispute;
     }
 
-    /** The customer's own, explicit step. Only this opens a dispute. */
     public Dispute confirm(String customerId, String disputeId) {
         Dispute dispute = findForCustomer(customerId, disputeId);
         if (dispute.status() != DisputeStatus.PENDING_CONFIRMATION) {
@@ -71,12 +66,6 @@ public class DisputeService {
         return new DisputeList(sorted(disputes.values().stream()
                 .filter(d -> d.customerId().equals(customerId))
                 .toList()));
-    }
-
-    public List<Dispute> awaitingConfirmation(String customerId) {
-        return disputesFor(customerId).disputes().stream()
-                .filter(d -> d.status() == DisputeStatus.PENDING_CONFIRMATION)
-                .toList();
     }
 
     @McpTool(description = "Find disputes by status, at or above a minimum amount in dollars",

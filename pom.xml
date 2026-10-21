@@ -11,9 +11,9 @@
     </parent>
 
     <groupId>dev.danvega</groupId>
-    <artifactId>bank</artifactId>
+    <artifactId>spring-ai-bank</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>bank</name>
+    <name>spring-ai-bank</name>
     <description>Spring AI 2.x demo: a small bank with card disputes</description>
 
     <properties>
@@ -37,6 +37,21 @@
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springaicommunity</groupId>
+            <artifactId>spring-ai-agent-utils</artifactId>
+            <version>0.13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springaicommunity</groupId>
+            <artifactId>spring-ai-starter-typesafe</artifactId>
+            <version>0.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springaicommunity</groupId>
+            <artifactId>typesafe-spring-ai</artifactId>
+            <version>0.4.0</version>
         </dependency>
 
         <dependency>

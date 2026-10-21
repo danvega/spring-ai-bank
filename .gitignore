@@ -6,3 +6,10 @@ target/
 .DS_Store
 .env
 *.log
+
+# Memory demo: long-term memory files, one folder per customer
+/memories/
+
+# Private run order for the talk
+AGENDA.md
+DECISIONS.md

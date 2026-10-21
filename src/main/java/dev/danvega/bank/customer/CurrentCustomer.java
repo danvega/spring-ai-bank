@@ -2,10 +2,7 @@ package dev.danvega.bank.customer;
 
 import org.springframework.stereotype.Component;
 
-/**
- * The signed-in customer. This demo has no real sign-in.
- * In a real app this would come from Spring Security.
- */
+// Demo only. A real app gets this from Spring Security.
 @Component
 public class CurrentCustomer {
 

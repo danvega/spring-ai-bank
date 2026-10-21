@@ -20,10 +20,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Demo 3 end to end: a real MCP client talks Streamable HTTP to /mcp.
- * No LLM involved, so no API key needed.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class McpServerTests {
 

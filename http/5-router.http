@@ -1,0 +1,44 @@
+### Demo 5: a decision model (Jev) picks which model answers
+@host = http://localhost:8099
+
+# Needs TYPESAFE_API_KEY. /route is one Jev call and no LLM call. /chat adds one OpenAI call.
+
+### R1. A card FAQ, decision only: LUNA (gpt-6-luna)
+POST {{host}}/api/router/route
+Content-Type: application/json
+
+{
+  "message": "How do I freeze my debit card?"
+}
+
+### R2. A duplicate charge: SOL (gpt-6.1-sol)
+POST {{host}}/api/router/route
+Content-Type: application/json
+
+{
+  "message": "I was charged twice at Acme Coffee on October 5. Can you check?"
+}
+
+### R3. Hardship: ASTRA (gpt-6-astra)
+POST {{host}}/api/router/route
+Content-Type: application/json
+
+{
+  "message": "I lost my job and can't make my mortgage payment this month. What can I do?"
+}
+
+### R4. Route, then answer with the chosen model
+POST {{host}}/api/router/chat
+Content-Type: application/json
+
+{
+  "message": "How do I freeze my debit card?"
+}
+
+### R5. An unclear question: if Jev isn't sure, the gate picks a stronger tier and "reason" says so
+POST {{host}}/api/router/route
+Content-Type: application/json
+
+{
+  "message": "Can I skip a payment this month?"
+}
