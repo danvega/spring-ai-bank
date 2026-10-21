@@ -21,14 +21,6 @@ spring:
         max-total-tool-calls: 10
         on-limit-exceeded: return-error-response
 
-    mcp:
-      server:
-        name: bank
-        version: 1.0.0
-        instructions: "Look up card transactions and disputes for a bank's back office. All data is made up."
-        # Required, or /mcp is a 404
-        protocol: STREAMABLE
-
 bank:
   memory:
     root: ${BANK_MEMORY_ROOT:./memories}

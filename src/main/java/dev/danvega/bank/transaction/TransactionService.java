@@ -11,19 +11,13 @@ import java.util.Optional;
 
 import dev.danvega.bank.BankData;
 
-import org.springframework.ai.mcp.annotation.McpTool;
-import org.springframework.ai.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TransactionService {
 
     private final List<Transaction> transactions = BankData.transactions();
-
-    @McpTool(description = "List a customer's recent card transactions, newest first",
-            annotations = @McpTool.McpAnnotations(readOnlyHint = true))
-    public TransactionHistory recentTransactions(
-            @McpToolParam(description = "Customer ID, like C-100") String customerId) {
+    public TransactionHistory recentTransactions(String customerId) {
         List<Transaction> recent = transactions.stream()
                 .filter(t -> t.customerId().equals(customerId))
                 .sorted(Comparator.comparing(Transaction::date).reversed())
@@ -31,11 +25,7 @@ public class TransactionService {
                 .toList();
         return new TransactionHistory(customerId, recent);
     }
-
-    @McpTool(description = "Find charges with the same merchant, amount and date",
-            annotations = @McpTool.McpAnnotations(readOnlyHint = true))
-    public DuplicateCharges findDuplicateCharges(
-            @McpToolParam(description = "Customer ID, like C-100") String customerId) {
+    public DuplicateCharges findDuplicateCharges(String customerId) {
         Map<ChargeKey, List<Transaction>> charges = new LinkedHashMap<>();
         for (Transaction t : recentTransactions(customerId).transactions()) {
             var key = new ChargeKey(t.merchant(), t.amount(), t.date());

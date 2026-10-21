@@ -1,6 +1,6 @@
 # Spring AI Bank
 
-A small, made-up bank that shows Spring AI 2 at work: structured output, tool calling, short-term and long-term memory, and MCP. Each feature is one small demo on the same bank data.
+A small, made-up bank that shows Spring AI 2 at work: structured output, tool calling, and short-term and long-term memory. Each feature is one small demo on the same bank data.
 
 Every name, card and amount is fake. One customer, Maria (`C-100`), was charged twice at Acme Coffee. The data lives in memory (`BankData.java`) and resets on every restart.
 
@@ -21,7 +21,6 @@ Java 27 (compiles for Java 21), Spring Boot 4.2.0-M2, Spring AI 2.1.0-M1 and Spr
 export OPENAI_API_KEY=your-openai-key
 ```
 
-- Optional: Node 22.19 or newer for MCP Inspector
 
 ## Run it
 
@@ -40,7 +39,6 @@ The [http](http) folder has one IntelliJ HTTP client file per demo, numbered in 
 | Read a dispute email | Structured output: an email in, a typed `DisputeCase` record out | [email](src/main/java/dev/danvega/bank/email/README.md) |
 | A banking assistant | Tool calling and the tool loop on existing services. The model proposes a dispute, and the customer confirms it. | [assistant](src/main/java/dev/danvega/bank/assistant/README.md) |
 | Memory | Short-term memory (chat memory, the window, the repository), then long-term memory as Markdown files | [memory](src/main/java/dev/danvega/bank/memory/README.md) |
-| Your bank over MCP | `@McpTool` on the bank's services, used from any MCP client | see below |
 
 A first call to try:
 
@@ -50,20 +48,6 @@ curl -s localhost:8099/api/assistant/chat -H 'Content-Type: application/json' \
 ```
 
 The answer names two $18.75 charges at Acme Coffee on October 5. The app log shows `execute_tool findDuplicateCharges {}`.
-
-### MCP
-
-`TransactionService` and `DisputeService` are also an MCP server at `http://localhost:8099/mcp` (Streamable HTTP). Their methods carry `@McpTool`, and read tools set `readOnlyHint`. Connect from Claude Code:
-
-```bash
-claude mcp add --transport http bank http://localhost:8099/mcp
-```
-
-Then ask "Show open disputes over $500." Or use MCP Inspector, or the raw calls in [http/4-mcp.http](http/4-mcp.http):
-
-```bash
-npx -y @modelcontextprotocol/inspector@2.10.1
-```
 
 ## Branches
 
@@ -79,7 +63,7 @@ Each branch adds one demo. `main` has them all.
 
 ## Where to look
 
-- [application.yaml](src/main/resources/application.yaml): the Responses API switch, tool limits and the MCP server settings.
+- [application.yaml](src/main/resources/application.yaml): the Responses API switch and the tool limits.
 - [AssistantController.java](src/main/java/dev/danvega/bank/assistant/AssistantController.java): a `ChatClient` with tools and chat memory.
 - [LongTermMemoryController.java](src/main/java/dev/danvega/bank/memory/LongTermMemoryController.java): short-term and long-term memory side by side.
 
@@ -97,4 +81,4 @@ The tests need no API key. `FakeOpenAi` is a small local stand-in for OpenAI, so
 - **The model can propose, never decide.** No tool confirms a dispute. Confirming is a normal endpoint, `POST /api/disputes/{id}/confirm`.
 - **Long-term memory is written to `memories/`**, one folder per customer. It's git-ignored. Delete it to start over.
 - **Spring AI Agent Utils is a Spring AI Community project,** not core Spring AI.
-- **Demo code, not production.** There is no authentication on the app or the MCP server. The signed-in customer is hard-coded (`CurrentCustomer`). For a real MCP server, add [mcp-security](https://github.com/spring-ai-community/mcp-security).
+- **Demo code, not production.** There is no authentication. The signed-in customer is hard-coded (`CurrentCustomer`).
