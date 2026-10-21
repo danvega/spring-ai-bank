@@ -25,11 +25,11 @@ A second endpoint takes the email plus a receipt photo. The image fills in what 
 
 ## Try it
 
-Run 2a to 2d in [http/2-dispute-email.http](../../../../../../../http/2-dispute-email.http):
+Run 2a to 2c in [http/2-dispute-email.http](../../../../../../../http/2-dispute-email.http):
 
 - **2a** A complete email: card 4242, Acme Coffee, $18.75, `DUPLICATE_CHARGE`, nothing missing.
 - **2b** No card number and no year: `cardLastFour` and `transactionDate` are `null`, and `missingFields` lists both.
-- **2d** A short email plus a receipt photo: the receipt supplies the card and the amount.
+- **2c** A short email plus a receipt photo: the receipt supplies the card and the amount.
 
 ## Why Swagger's `@Schema` is here
 
