@@ -48,6 +48,7 @@ public final class FakeOpenAi {
     public static void register(DynamicPropertyRegistry registry) {
         registry.add("spring.ai.openai.base-url", () -> "http://127.0.0.1:" + INSTANCE.port() + "/v1");
         registry.add("spring.ai.openai.api-key", () -> "test-key");
+        registry.add("spring.ai.openai.chat.api", () -> "responses");
         registry.add("spring.ai.openai.max-retries", () -> 0);
     }
 

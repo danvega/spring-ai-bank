@@ -67,6 +67,18 @@ Then ask "Show open disputes over $500." Or use MCP Inspector, or the raw calls 
 npx -y @modelcontextprotocol/inspector@2.10.1
 ```
 
+## Branches
+
+Each branch adds one demo. `main` has them all.
+
+| Branch | Adds |
+|---|---|
+| `01-assistant` | Tool calling. It starts on Chat Completions, so tool calling fails until you turn on the Responses API. |
+| `02-structured-output` | Read a dispute email |
+| `03-memory` | Short-term and long-term memory |
+| `04-mcp` | The bank's services over MCP |
+| `main` | Route to the right model with Jev |
+
 ## Where to look
 
 - [application.yaml](src/main/resources/application.yaml): the Responses API switch, tool limits and the MCP server settings.
