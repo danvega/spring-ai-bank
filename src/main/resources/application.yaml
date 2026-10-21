@@ -7,9 +7,9 @@ spring:
       chat:
         # Astra needs the Responses API to call tools
         api: responses
-        model: ${OPENAI_MODEL:gpt-6-astra}
+        model: gpt-6-astra
       responses:
-        model: ${OPENAI_MODEL:gpt-6-astra}
+        model: gpt-6-astra
         reasoning-effort: low
 
     tools:
