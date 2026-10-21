@@ -40,7 +40,7 @@ The [http](http) folder has one IntelliJ HTTP client file per demo, numbered in 
 | Read a dispute email | Structured output: an email in, a typed `DisputeCase` record out | [email](src/main/java/dev/danvega/bank/email/README.md) |
 | A banking assistant | Tool calling and the tool loop on existing services. The model proposes a dispute, and the customer confirms it. | [assistant](src/main/java/dev/danvega/bank/assistant/README.md) |
 | Memory | Short-term memory (chat memory, the window, the repository), then long-term memory as Markdown files | [memory](src/main/java/dev/danvega/bank/memory/README.md) |
-| Your bank over MCP | A small set of `@McpTool` tools designed for agents, used from any MCP client | see below |
+| Your bank over MCP | A small set of `@McpTool` tools designed for agents, used from any MCP client | [mcp](src/main/java/dev/danvega/bank/mcp/README.md) |
 
 A first call to try:
 
@@ -53,17 +53,7 @@ The answer names two $18.75 charges at Acme Coffee on October 5. The app log sho
 
 ### MCP
 
-`BankMcpTools` exposes four tools designed for a back-office agent, on top of the bank's services. The app serves them at `http://localhost:8099/mcp` (Streamable HTTP). Read tools set `readOnlyHint`. Connect from Claude Code:
-
-```bash
-claude mcp add --transport http bank http://localhost:8099/mcp
-```
-
-Then ask "Show open disputes over $500." Or use MCP Inspector, or the raw calls in [http/3-mcp.http](http/3-mcp.http):
-
-```bash
-npx -y @modelcontextprotocol/inspector@2.10.1
-```
+The app is also an MCP server at `http://localhost:8099/mcp`. The [MCP README](src/main/java/dev/danvega/bank/mcp/README.md) shows how to try it with MCP Inspector and Claude Code.
 
 ## Branches
 
