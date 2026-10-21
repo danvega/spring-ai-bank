@@ -7,19 +7,13 @@ Content-Type: text/plain
 
 < ../src/main/resources/emails/double-charge.txt
 
-### 2b. An email with no card number: missingFields lists it
+### 2b. No card number and no year: both null, both listed in missingFields
 POST {{host}}/api/disputes/emails
 Content-Type: text/plain
 
 < ../src/main/resources/emails/package-never-arrived.txt
 
-### 2c. A fraud email
-POST {{host}}/api/disputes/emails
-Content-Type: text/plain
-
-< ../src/main/resources/emails/unknown-charge.txt
-
-### 2d. Stretch: a short email plus a photo of the receipt
+### 2c. Optional: a short email plus a photo of the receipt (a media part)
 POST {{host}}/api/disputes/emails
 Content-Type: multipart/form-data; boundary=receipt
 
