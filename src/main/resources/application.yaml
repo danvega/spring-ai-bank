@@ -29,11 +29,6 @@ spring:
         # Required, or /mcp is a 404
         protocol: STREAMABLE
 
-    # Or a local Ollama (model: nimble) or Laya server
-    typesafe:
-      api-key: ${TYPESAFE_API_KEY}
-      model: jev-1.13.0
-
 bank:
   memory:
     root: ${BANK_MEMORY_ROOT:./memories}
