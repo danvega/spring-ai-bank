@@ -28,7 +28,7 @@ export OPENAI_API_KEY=your-openai-key
 ./mvnw spring-boot:run
 ```
 
-The app starts on http://localhost:8099 and listens on `127.0.0.1` only.
+The app starts on http://localhost:8099.
 
 ## Try it
 
