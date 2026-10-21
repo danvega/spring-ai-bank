@@ -75,6 +75,6 @@ The tests need no API key. `FakeOpenAi` is a small local stand-in for OpenAI, so
 
 ## Good to know
 
-- **GPT-6 Astra and GPT-6.1 Sol need OpenAI's Responses API for tool calling.** `spring.ai.openai.chat.api: responses` turns it on (new in Spring AI 2.1). Comment it out and the assistant fails with a 400 from Chat Completions. The default model is `gpt-6-astra`. Change it with `OPENAI_MODEL=gpt-6.1-sol`.
+- **GPT-6 Astra and GPT-6.1 Sol need OpenAI's Responses API for tool calling.** `spring.ai.openai.chat.api: responses` turns it on (new in Spring AI 2.1). Comment it out and the assistant fails with a 400 from Chat Completions. The model is `gpt-6-astra`.
 - **The model can propose, never decide.** No tool confirms a dispute. Confirming is a normal endpoint, `POST /api/disputes/{id}/confirm`.
 - **Demo code, not production.** There is no authentication. The signed-in customer is hard-coded (`CurrentCustomer`).
