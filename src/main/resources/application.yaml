@@ -5,12 +5,12 @@ spring:
     openai:
       api-key: ${OPENAI_API_KEY}
       chat:
-        # Astra needs the Responses API to call tools. Uncomment the next line.
+        # Astra needs the Responses API to call tools. Uncomment api and the responses block.
         # api: responses
-        model: ${OPENAI_MODEL:gpt-6-astra}
-      responses:
-        model: ${OPENAI_MODEL:gpt-6-astra}
-        reasoning-effort: low
+        model: gpt-6-astra
+      # responses:
+      #   model: gpt-6-astra
+      #   reasoning-effort: low
 
     tools:
       limits:

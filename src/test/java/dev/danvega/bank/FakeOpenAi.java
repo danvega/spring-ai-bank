@@ -49,6 +49,7 @@ public final class FakeOpenAi {
         registry.add("spring.ai.openai.base-url", () -> "http://127.0.0.1:" + INSTANCE.port() + "/v1");
         registry.add("spring.ai.openai.api-key", () -> "test-key");
         registry.add("spring.ai.openai.chat.api", () -> "responses");
+        registry.add("spring.ai.openai.responses.model", () -> "gpt-6-astra");
         registry.add("spring.ai.openai.max-retries", () -> 0);
     }
 
