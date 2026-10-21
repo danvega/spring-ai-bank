@@ -22,7 +22,5 @@ spring:
         max-total-tool-calls: 10
         on-limit-exceeded: return-error-response
 
-# Localhost only, no auth
 server:
   port: 8099
-  address: 127.0.0.1
