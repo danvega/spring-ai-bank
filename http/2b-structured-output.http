@@ -1,19 +1,19 @@
-### Demo 2: read a dispute email (structured output)
+### 2b: read a dispute email (structured output)
 @host = http://localhost:8099
 
-### 2a. A complete email: Acme Coffee double charge
+### E1. A complete email: Acme Coffee double charge
 POST {{host}}/api/disputes/emails
 Content-Type: text/plain
 
 < ../src/main/resources/emails/double-charge.txt
 
-### 2b. No card number and no year: both null, both listed in missingFields
+### E2. No card number and no year: both null, both listed in missingFields
 POST {{host}}/api/disputes/emails
 Content-Type: text/plain
 
 < ../src/main/resources/emails/package-never-arrived.txt
 
-### 2c. Optional: a short email plus a photo of the receipt (a media part)
+### E3. Optional: a short email plus a photo of the receipt (a media part)
 POST {{host}}/api/disputes/emails
 Content-Type: multipart/form-data; boundary=BOUNDARY
 

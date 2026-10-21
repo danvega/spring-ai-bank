@@ -1,7 +1,7 @@
-### Demo 4: the bank's services over MCP. Claude Code or MCP Inspector is nicer. These are the raw calls.
+### 3: the bank's services over MCP. Claude Code or MCP Inspector is nicer. These are the raw calls.
 @host = http://localhost:8099
 
-### 4a. Initialize. Copy the Mcp-Session-Id response header into @session below.
+### M1. Initialize. Copy the Mcp-Session-Id response header into @session below.
 POST {{host}}/mcp
 Content-Type: application/json
 Accept: application/json, text/event-stream
@@ -11,7 +11,7 @@ Accept: application/json, text/event-stream
 ###
 @session = paste-the-Mcp-Session-Id-here
 
-### 4b. Tell the server we are ready
+### M2. Tell the server we are ready
 POST {{host}}/mcp
 Content-Type: application/json
 Accept: application/json, text/event-stream
@@ -19,7 +19,7 @@ Mcp-Session-Id: {{session}}
 
 {"jsonrpc":"2.0","method":"notifications/initialized"}
 
-### 4c. List the tools (look for readOnlyHint)
+### M3. List the tools (look for readOnlyHint)
 POST {{host}}/mcp
 Content-Type: application/json
 Accept: application/json, text/event-stream
@@ -27,7 +27,7 @@ Mcp-Session-Id: {{session}}
 
 {"jsonrpc":"2.0","id":2,"method":"tools/list"}
 
-### 4d. Open disputes over $500
+### M4. Open disputes over $500
 POST {{host}}/mcp
 Content-Type: application/json
 Accept: application/json, text/event-stream

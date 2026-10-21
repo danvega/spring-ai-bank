@@ -1,4 +1,4 @@
-### Demo 5: a decision model (Jev) picks which model answers
+### 4: a decision model (Jev) picks which model answers
 @host = http://localhost:8099
 
 # Needs TYPESAFE_API_KEY. /route is one Jev call and no LLM call. /chat adds one OpenAI call.

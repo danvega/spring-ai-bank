@@ -22,7 +22,7 @@ static final JevConfidenceGate GATE = JevConfidenceGate.builder()
 
 ## Try it
 
-You need `TYPESAFE_API_KEY` as well as `OPENAI_API_KEY`. Run R1 to R5 in [http/5-router.http](../../../../../../../http/5-router.http):
+You need `TYPESAFE_API_KEY` as well as `OPENAI_API_KEY`. Run R1 to R5 in [http/4-jev.http](../../../../../../../http/4-jev.http):
 
 - **R1** "How do I freeze my debit card?": LUNA. No LLM was called, only one Jev call.
 - **R2** A duplicate charge: SOL.
