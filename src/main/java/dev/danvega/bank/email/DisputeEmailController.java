@@ -22,6 +22,7 @@ class DisputeEmailController {
                         You read customer emails for a bank's card dispute team.
                         Use only facts from the email and any attached receipt. Never guess.
                         If a value is not given, set it to null and add the field name to missingFields.
+                        If the date has no year, set transactionDate to null too.
                         """)
                 .build();
     }
