@@ -1,6 +1,6 @@
 # Spring AI Bank
 
-A small, made-up bank that shows Spring AI 2 at work: structured output, tool calling, and short-term and long-term memory. Each feature is one small demo on the same bank data.
+A small, made-up bank that shows Spring AI 2 at work: structured output, and tool calling. Each feature is one small demo on the same bank data.
 
 Every name, card and amount is fake. One customer, Maria (`C-100`), was charged twice at Acme Coffee. The data lives in memory (`BankData.java`) and resets on every restart.
 
@@ -10,7 +10,7 @@ The demo app for the talk "What's New in Spring AI 2.x: Putting AI to Work in Yo
 
 ## Tested with
 
-Java 27 (compiles for Java 21), Spring Boot 4.2.0-M2, Spring AI 2.1.0-M1 and Spring AI Agent Utils 0.13.0.
+Java 27 (compiles for Java 21), Spring Boot 4.2.0-M2, Spring AI 2.1.0-M1.
 
 ## What you need
 
@@ -38,7 +38,6 @@ The [http](http) folder has one IntelliJ HTTP client file per demo, numbered in 
 |---|---|---|
 | Read a dispute email | Structured output: an email in, a typed `DisputeCase` record out | [email](src/main/java/dev/danvega/bank/email/README.md) |
 | A banking assistant | Tool calling and the tool loop on existing services. The model proposes a dispute, and the customer confirms it. | [assistant](src/main/java/dev/danvega/bank/assistant/README.md) |
-| Memory | Short-term memory (chat memory, the window, the repository), then long-term memory as Markdown files | [memory](src/main/java/dev/danvega/bank/memory/README.md) |
 
 A first call to try:
 
@@ -65,7 +64,6 @@ Each branch adds one demo. `main` has them all.
 
 - [application.yaml](src/main/resources/application.yaml): the Responses API switch and the tool limits.
 - [AssistantController.java](src/main/java/dev/danvega/bank/assistant/AssistantController.java): a `ChatClient` with tools and chat memory.
-- [LongTermMemoryController.java](src/main/java/dev/danvega/bank/memory/LongTermMemoryController.java): short-term and long-term memory side by side.
 
 ## Tests
 
@@ -79,6 +77,4 @@ The tests need no API key. `FakeOpenAi` is a small local stand-in for OpenAI, so
 
 - **GPT-6 Astra and GPT-6.1 Sol need OpenAI's Responses API for tool calling.** `spring.ai.openai.chat.api: responses` turns it on (new in Spring AI 2.1). Comment it out and the assistant fails with a 400 from Chat Completions. The default model is `gpt-6-astra`. Change it with `OPENAI_MODEL=gpt-6.1-sol`.
 - **The model can propose, never decide.** No tool confirms a dispute. Confirming is a normal endpoint, `POST /api/disputes/{id}/confirm`.
-- **Long-term memory is written to `memories/`**, one folder per customer. It's git-ignored. Delete it to start over.
-- **Spring AI Agent Utils is a Spring AI Community project,** not core Spring AI.
 - **Demo code, not production.** There is no authentication. The signed-in customer is hard-coded (`CurrentCustomer`).

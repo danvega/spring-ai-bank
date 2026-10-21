@@ -1,2 +1,0 @@
-- [Travel](travel.md) - Traveling to Portugal next week
-- [Contact preferences](contact-preferences.md) - Text only, never email

@@ -21,10 +21,6 @@ spring:
         max-total-tool-calls: 10
         on-limit-exceeded: return-error-response
 
-bank:
-  memory:
-    root: ${BANK_MEMORY_ROOT:./memories}
-
 # Localhost only, no auth
 server:
   port: 8099
