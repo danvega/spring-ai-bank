@@ -34,7 +34,5 @@ bank:
   memory:
     root: ${BANK_MEMORY_ROOT:./memories}
 
-# Localhost only, no auth
 server:
   port: 8099
-  address: 127.0.0.1
