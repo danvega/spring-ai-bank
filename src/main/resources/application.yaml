@@ -17,7 +17,8 @@ spring:
       limits:
         max-calls-per-tool-default: 5
         max-calls-per-tool:
-          # Brackets keep the camel-case key
+          # At most one dispute proposal per message, so the model can't propose a pile of them.
+          # The brackets keep the camel-case name as the key.
           "[proposeDispute]": 1
         max-total-tool-calls: 10
         on-limit-exceeded: return-error-response
