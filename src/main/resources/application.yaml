@@ -5,8 +5,8 @@ spring:
     openai:
       api-key: ${OPENAI_API_KEY}
       chat:
-        # Astra needs the Responses API to call tools
-        api: responses
+        # Astra needs the Responses API to call tools. Uncomment the next line.
+        # api: responses
         model: ${OPENAI_MODEL:gpt-6-astra}
       responses:
         model: ${OPENAI_MODEL:gpt-6-astra}
