@@ -26,6 +26,7 @@ public class DisputeService {
         this.transactionService = transactionService;
         BankData.disputes().forEach(d -> disputes.put(d.id(), d));
     }
+
     public Dispute propose(
             String customerId,
             String transactionId,
@@ -61,6 +62,7 @@ public class DisputeService {
                 .filter(d -> d.customerId().equals(customerId))
                 .toList()));
     }
+
     public DisputeList findDisputes(DisputeStatus status,
             BigDecimal minAmount) {
         return new DisputeList(sorted(disputes.values().stream()

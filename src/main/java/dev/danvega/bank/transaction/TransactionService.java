@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class TransactionService {
 
     private final List<Transaction> transactions = BankData.transactions();
+
     public TransactionHistory recentTransactions(String customerId) {
         List<Transaction> recent = transactions.stream()
                 .filter(t -> t.customerId().equals(customerId))
@@ -25,6 +26,7 @@ public class TransactionService {
                 .toList();
         return new TransactionHistory(customerId, recent);
     }
+
     public DuplicateCharges findDuplicateCharges(String customerId) {
         Map<ChargeKey, List<Transaction>> charges = new LinkedHashMap<>();
         for (Transaction t : recentTransactions(customerId).transactions()) {
