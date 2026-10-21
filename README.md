@@ -11,7 +11,7 @@ This is the demo app for the talk "What's New in Spring AI 2.x: Putting AI to Wo
 | 2a | Tool calling and the tool loop. Starts on Chat Completions, so tool calling fails until you turn on the Responses API. | [`2a-assistant`](https://github.com/danvega/spring-ai-bank/tree/2a-assistant) | [assistant](src/main/java/dev/danvega/bank/assistant/README.md) |
 | 2b | Structured output: an email in, a typed record out | [`2b-structured-output`](https://github.com/danvega/spring-ai-bank/tree/2b-structured-output) | [email](src/main/java/dev/danvega/bank/email/README.md) |
 | 2c | Short-term memory, then long-term memory | [`2c-memory`](https://github.com/danvega/spring-ai-bank/tree/2c-memory) | [memory](src/main/java/dev/danvega/bank/memory/README.md) |
-| 3 | MCP tools designed for agents, on top of the bank's services | [`3-mcp`](https://github.com/danvega/spring-ai-bank/tree/3-mcp) | [MCP](#mcp) |
+| 3 | MCP tools designed for agents, on top of the bank's services | [`3-mcp`](https://github.com/danvega/spring-ai-bank/tree/3-mcp) | [mcp](src/main/java/dev/danvega/bank/mcp/README.md) |
 | 4 | A decision model (Jev) picks which GPT-6 model answers | [`4-jev`](https://github.com/danvega/spring-ai-bank/tree/4-jev) | [router](src/main/java/dev/danvega/bank/router/README.md) |
 
 Each demo has an IntelliJ HTTP client file in [http](http), numbered in the same order.
@@ -30,11 +30,7 @@ The app runs on http://localhost:8099. `./mvnw test` needs no key.
 
 ### MCP
 
-`BankMcpTools` exposes four tools designed for a back-office agent, on top of the bank's services, so the app is also an MCP server at `http://localhost:8099/mcp`. Connect from Claude Code:
-
-```bash
-claude mcp add --transport http bank http://localhost:8099/mcp
-```
+The app is also an MCP server at `http://localhost:8099/mcp`. The [MCP README](src/main/java/dev/danvega/bank/mcp/README.md) shows how to try it with MCP Inspector and Claude Code.
 
 ## Resources
 
