@@ -60,12 +60,12 @@ model call -> answers with text
 
 ## Try it
 
-Run 1a to 1d in [http/1-assistant.http](../../../../../../../http/1-assistant.http):
+Run A1 to A4 in [http/2a-assistant.http](../../../../../../../http/2a-assistant.http):
 
-1. **1a** "Why was I charged twice at Acme Coffee?" Watch the loop in the console.
-2. **1b** "Yes, please dispute the second charge." The loop runs again, this time with `proposeDispute`.
-3. **1c** `GET /api/disputes`: `D-1005` is `PENDING_CONFIRMATION`.
-4. **1d** The customer confirms it. Now it's `OPEN`. A person made the decision.
+1. **A1** "Why was I charged twice at Acme Coffee?" Watch the loop in the console.
+2. **A2** "Yes, please dispute the second charge." The loop runs again, this time with `proposeDispute`.
+3. **A3** `GET /api/disputes`: `D-1005` is `PENDING_CONFIRMATION`.
+4. **A4** The customer confirms it. Now it's `OPEN`. A person made the decision.
 
 ## Good to know
 
