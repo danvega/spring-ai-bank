@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import dev.danvega.bank.customer.Account;
 import dev.danvega.bank.customer.Customer;
 import dev.danvega.bank.dispute.Dispute;
 import dev.danvega.bank.dispute.DisputeStatus;
@@ -21,14 +20,6 @@ public final class BankData {
                 new Customer("C-100", "Maria Lopez", "maria.lopez@example.com"),
                 new Customer("C-200", "James Carter", "james.carter@example.com"),
                 new Customer("C-300", "Priya Shah", "priya.shah@example.com"));
-    }
-
-    public static List<Account> accounts() {
-        return List.of(
-                new Account("A-100", "C-100", "Checking", "4242"),
-                new Account("A-101", "C-100", "Credit card", "1881"),
-                new Account("A-200", "C-200", "Credit card", "7310"),
-                new Account("A-300", "C-300", "Credit card", "5566"));
     }
 
     public static List<Transaction> transactions() {
