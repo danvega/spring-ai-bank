@@ -13,8 +13,6 @@ import dev.danvega.bank.BankData;
 import dev.danvega.bank.transaction.Transaction;
 import dev.danvega.bank.transaction.TransactionService;
 
-import org.springframework.ai.mcp.annotation.McpTool;
-import org.springframework.ai.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,14 +27,11 @@ public class DisputeService {
         BankData.disputes().forEach(d -> disputes.put(d.id(), d));
     }
 
-    @McpTool(name = "proposeDispute",
-            description = "Prepare a dispute. It stays pending until the customer confirms it in the app.",
-            annotations = @McpTool.McpAnnotations(destructiveHint = false))
     public Dispute propose(
-            @McpToolParam(description = "Customer ID, like C-100") String customerId,
-            @McpToolParam(description = "Transaction ID, like T-1006") String transactionId,
+            String customerId,
+            String transactionId,
             ReasonCode reason,
-            @McpToolParam(description = "The customer's reason, in one sentence") String explanation) {
+            String explanation) {
         Transaction transaction = transactionService.findById(customerId, transactionId)
                 .orElseThrow(() -> new IllegalArgumentException("No transaction " + transactionId + " for this customer"));
 
@@ -68,10 +63,8 @@ public class DisputeService {
                 .toList()));
     }
 
-    @McpTool(description = "Find disputes by status, at or above a minimum amount in dollars",
-            annotations = @McpTool.McpAnnotations(readOnlyHint = true))
     public DisputeList findDisputes(DisputeStatus status,
-            @McpToolParam(description = "Minimum amount in dollars, like 500") BigDecimal minAmount) {
+            BigDecimal minAmount) {
         return new DisputeList(sorted(disputes.values().stream()
                 .filter(d -> d.status() == status)
                 .filter(d -> d.amount().compareTo(minAmount) >= 0)
