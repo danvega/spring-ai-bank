@@ -1,102 +1,48 @@
 # Spring AI Bank
 
-A small, made-up bank that shows Spring AI 2 at work: structured output, tool calling, short-term and long-term memory, MCP, and routing with a decision model. Each feature is one small demo on the same bank data.
+A small, made-up bank that shows Spring AI 2 at work. Each demo adds one feature to the same app, on its own branch. `main` has all of them.
 
-Every name, card and amount is fake. One customer, Maria (`C-100`), was charged twice at Acme Coffee. The data lives in memory (`BankData.java`) and resets on every restart.
+This is the demo app for the talk "What's New in Spring AI 2.x: Putting AI to Work in Your Applications" (October 22, 2026).
 
-## Related content
+## The demos
 
-The demo app for the talk "What's New in Spring AI 2.x: Putting AI to Work in Your Applications" (October 22, 2026).
+| # | Demo | Branch | Read |
+|---|---|---|---|
+| 1 | Tool calling and the tool loop. Starts on Chat Completions, so tool calling fails until you turn on the Responses API. | [`01-assistant`](https://github.com/danvega/spring-ai-bank/tree/01-assistant) | [assistant](src/main/java/dev/danvega/bank/assistant/README.md) |
+| 2 | Structured output: an email in, a typed record out | [`02-structured-output`](https://github.com/danvega/spring-ai-bank/tree/02-structured-output) | [email](src/main/java/dev/danvega/bank/email/README.md) |
+| 3 | Short-term memory, then long-term memory | [`03-memory`](https://github.com/danvega/spring-ai-bank/tree/03-memory) | [memory](src/main/java/dev/danvega/bank/memory/README.md) |
+| 4 | The bank's services as an MCP server | [`04-mcp`](https://github.com/danvega/spring-ai-bank/tree/04-mcp) | [MCP](#mcp) |
+| 5 | A decision model (Jev) picks which GPT-6 model answers | `main` | [router](src/main/java/dev/danvega/bank/router/README.md) |
 
-## Tested with
+Each demo has an IntelliJ HTTP client file in [http](http), numbered in the same order.
 
-Java 27 (compiles for Java 21), Spring Boot 4.2.0-M2, Spring AI 2.1.0-M1, Spring AI Agent Utils 0.13.0 and Spring AI TypeSafe 0.4.0.
+## Run it
 
-## What you need
-
-- JDK 21 or newer
-- An OpenAI API key, and a TypeSafe API key for the router demo (any value works if you skip that demo):
+You need JDK 21 or newer, an OpenAI API key, and a TypeSafe API key for demo 5 (any value works if you skip it).
 
 ```bash
 export OPENAI_API_KEY=your-openai-key
 export TYPESAFE_API_KEY=your-typesafe-key
-```
-
-- Optional: Node 22.19 or newer for MCP Inspector
-
-## Run it
-
-```bash
 ./mvnw spring-boot:run
 ```
 
-The app starts on http://localhost:8099 and listens on `127.0.0.1` only.
-
-## Try it
-
-The [http](http) folder has one IntelliJ HTTP client file per demo, numbered in a good order to try them. Each demo folder has a short README.
-
-| Demo | Shows | Folder |
-|---|---|---|
-| Read a dispute email | Structured output: an email in, a typed `DisputeCase` record out | [email](src/main/java/dev/danvega/bank/email/README.md) |
-| A banking assistant | Tool calling and the tool loop on existing services. The model proposes a dispute, and the customer confirms it. | [assistant](src/main/java/dev/danvega/bank/assistant/README.md) |
-| Memory | Short-term memory (chat memory, the window, the repository), then long-term memory as Markdown files | [memory](src/main/java/dev/danvega/bank/memory/README.md) |
-| Your bank over MCP | `@McpTool` on the bank's services, used from any MCP client | see below |
-| Route to the right model | A decision model (Jev) picks which GPT-6 model answers | [router](src/main/java/dev/danvega/bank/router/README.md) |
-
-A first call to try:
-
-```bash
-curl -s localhost:8099/api/assistant/chat -H 'Content-Type: application/json' \
-  -d '{"conversationId":"c1","message":"Why was I charged twice at Acme Coffee?"}'
-```
-
-The answer names two $18.75 charges at Acme Coffee on October 5. The app log shows `execute_tool findDuplicateCharges {}`.
+The app runs on http://localhost:8099. `./mvnw test` needs no key.
 
 ### MCP
 
-`TransactionService` and `DisputeService` are also an MCP server at `http://localhost:8099/mcp` (Streamable HTTP). Their methods carry `@McpTool`, and read tools set `readOnlyHint`. Connect from Claude Code:
+`TransactionService` and `DisputeService` carry `@McpTool`, so the app is also an MCP server at `http://localhost:8099/mcp`. Connect from Claude Code:
 
 ```bash
 claude mcp add --transport http bank http://localhost:8099/mcp
 ```
 
-Then ask "Show open disputes over $500." Or use MCP Inspector, or the raw calls in [http/4-mcp.http](http/4-mcp.http):
+## Resources
 
-```bash
-npx -y @modelcontextprotocol/inspector@2.10.1
-```
+- [Spring AI reference docs](https://docs.spring.io/spring-ai/reference/)
+- [Upgrade notes](https://docs.spring.io/spring-ai/reference/upgrade-notes.html) for moving from 1.x to 2.x
+- [OpenAI Responses API in Spring AI 2.1](https://docs.spring.io/spring-ai/reference/2.1/api/chat/openai-responses-chat.html)
+- [Chat memory](https://docs.spring.io/spring-ai/reference/api/chat-memory.html)
+- [Spring AI Agent Utils](https://github.com/spring-ai-community/spring-ai-agent-utils), for `AutoMemoryTools`
+- [mcp-security](https://github.com/spring-ai-community/mcp-security), to secure an MCP server
 
-## Branches
-
-Each branch adds one demo. `main` has them all.
-
-| Branch | Adds |
-|---|---|
-| `01-assistant` | Tool calling. It starts on Chat Completions, so tool calling fails until you turn on the Responses API. |
-| `02-structured-output` | Read a dispute email |
-| `03-memory` | Short-term and long-term memory |
-| `04-mcp` | The bank's services over MCP |
-| `main` | Route to the right model with Jev |
-
-## Where to look
-
-- [application.yaml](src/main/resources/application.yaml): the Responses API switch, tool limits and the MCP server settings.
-- [AssistantController.java](src/main/java/dev/danvega/bank/assistant/AssistantController.java): a `ChatClient` with tools and chat memory.
-- [LongTermMemoryController.java](src/main/java/dev/danvega/bank/memory/LongTermMemoryController.java): short-term and long-term memory side by side.
-
-## Tests
-
-```bash
-./mvnw test
-```
-
-The tests need no API key. `FakeOpenAi` and `FakeJev` are small local stand-ins, so the real Spring AI clients run end to end. The `*LiveTests` call the real APIs and run only when the keys are set.
-
-## Good to know
-
-- **GPT-6 Astra and GPT-6.1 Sol need OpenAI's Responses API for tool calling.** `spring.ai.openai.chat.api: responses` turns it on (new in Spring AI 2.1). Comment it out and the assistant fails with a 400 from Chat Completions. The model is `gpt-6-astra`.
-- **The model can propose, never decide.** No tool confirms a dispute. Confirming is a normal endpoint, `POST /api/disputes/{id}/confirm`.
-- **Long-term memory is written to `memories/`**, one folder per customer. It's git-ignored. Delete it to start over.
-- **Spring AI Agent Utils and Spring AI TypeSafe are Spring AI Community projects,** not core Spring AI.
-- **Demo code, not production.** There is no authentication on the app or the MCP server. The signed-in customer is hard-coded (`CurrentCustomer`). For a real MCP server, add [mcp-security](https://github.com/spring-ai-community/mcp-security).
+Demo code, not production: there is no authentication, and all data is fake.
