@@ -28,7 +28,7 @@ export OPENAI_API_KEY=your-openai-key
 ./mvnw spring-boot:run
 ```
 
-The app starts on http://localhost:8099 and listens on `127.0.0.1` only.
+The app starts on http://localhost:8099.
 
 ## Try it
 
@@ -74,6 +74,6 @@ The tests need no API key. `FakeOpenAi` is a small local stand-in for OpenAI, so
 
 ## Good to know
 
-- **GPT-6 Astra and GPT-6.1 Sol need OpenAI's Responses API for tool calling.** `spring.ai.openai.chat.api: responses` turns it on (new in Spring AI 2.1). **On this branch it's commented out,** so the assistant first fails with a 400 from Chat Completions. Uncomment it and the `responses:` block, restart, and it works. The model is `gpt-6-astra`.
+- **GPT-6 Astra and GPT-6.1 Sol need OpenAI's Responses API for tool calling.** `spring.ai.openai.chat.api: responses` turns it on (new in Spring AI 2.1). **On this branch it's commented out,** so the assistant first fails with a 400 from Chat Completions. Uncomment it, restart, and it works. The model is `gpt-6-astra`.
 - **The model can propose, never decide.** No tool confirms a dispute. Confirming is a normal endpoint, `POST /api/disputes/{id}/confirm`.
 - **Demo code, not production.** There is no authentication. The signed-in customer is hard-coded (`CurrentCustomer`).

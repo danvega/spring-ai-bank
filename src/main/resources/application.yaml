@@ -5,13 +5,13 @@ spring:
     openai:
       api-key: ${OPENAI_API_KEY}
       chat:
-        # Astra needs the Responses API to call tools. Uncomment api and the responses block.
+        # Astra needs the Responses API to call tools. Uncomment the next line.
         # api: responses
         # Models: gpt-6-astra (most capable), gpt-6.1-sol (balanced), gpt-6-luna (fastest, cheapest)
         model: gpt-6-astra
-      # responses:
-      #   model: gpt-6-astra
-      #   reasoning-effort: low
+      responses:
+        model: gpt-6-astra
+        reasoning-effort: low
 
     tools:
       limits:
@@ -22,7 +22,5 @@ spring:
         max-total-tool-calls: 10
         on-limit-exceeded: return-error-response
 
-# Localhost only, no auth
 server:
   port: 8099
-  address: 127.0.0.1
