@@ -7,7 +7,8 @@ import java.util.List;
 import dev.danvega.bank.dispute.ReasonCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-// Strict mode wants every field, so a missing value is null.
+// Spring AI reads Swagger's @Schema. nullable = true means "required, but may be null",
+// which OpenAI's strict mode needs. Plain @Nullable makes OpenAI reject the schema.
 public record DisputeCase(
         @Schema(nullable = true, description = "Last four digits of the card") String cardLastFour,
         @Schema(nullable = true) String merchant,
