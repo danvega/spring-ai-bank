@@ -7,7 +7,7 @@ A card FAQ goes to the cheapest model. A mortgage hardship question goes to the 
 ## The code
 
 - [ModelTier.java](ModelTier.java): three tiers, cheapest first. LUNA (`gpt-6-luna`), SOL (`gpt-6.1-sol`) and ASTRA (`gpt-6-astra`). The descriptions are the routing rules. To change the routing, change the English, not the code.
-- [ModelRouter.java](ModelRouter.java): one Jev call with a `Choice` question, one option per tier. The answer is a tier, a probability for each tier, and a confidence. Nothing to parse.
+- [ModelRouter.java](ModelRouter.java): one Jev call with a `Choice` question, one option per tier. The answer is a tier and a confidence. Nothing to parse.
 - A confidence gate decides what happens when Jev isn't sure:
 
 ```java
@@ -17,18 +17,19 @@ static final JevConfidenceGate GATE = JevConfidenceGate.builder()
         .build();
 ```
 
-  `EXECUTE` uses Jev's pick. `CONFIRM` goes one tier up. `ESCALATE` goes to ASTRA.
+  If the gate says `EXECUTE`, Jev's pick answers. Anything else, and ASTRA answers: not sure means use the strongest model.
 - [RouterController.java](RouterController.java): `POST /api/router/route` returns only the decision. `POST /api/router/chat` routes, then answers with the chosen model, set per request with `OpenAiResponsesChatOptions`.
 
 ## Try it
 
-You need `TYPESAFE_API_KEY` as well as `OPENAI_API_KEY`. Run R1 to R5 in [http/4-jev.http](../../../../../../../http/4-jev.http):
+You need `TYPESAFE_API_KEY` as well as `OPENAI_API_KEY`. Run R1 to R4 in [http/4-jev.http](../../../../../../../http/4-jev.http):
 
 - **R1** "How do I freeze my debit card?": LUNA. No LLM was called, only one Jev call.
 - **R2** A duplicate charge: SOL.
 - **R3** A mortgage hardship question: ASTRA.
 - **R4** Route and answer. The log line names the Jev model version, the request ID and the pick. That's the audit trail.
-- **R5** An unclear question. If Jev isn't sure, the gate picks a stronger tier and `reason` says why.
+
+Jev is usually very sure, so you won't see the gate step in live. `RouterControllerTests.lowConfidenceGoesToTheStrongestTier` shows it with a fake Jev.
 
 ## Good to know
 

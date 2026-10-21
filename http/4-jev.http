@@ -34,11 +34,3 @@ Content-Type: application/json
 {
   "message": "How do I freeze my debit card?"
 }
-
-### R5. An unclear question: if Jev isn't sure, the gate picks a stronger tier and "reason" says so
-POST {{host}}/api/router/route
-Content-Type: application/json
-
-{
-  "message": "Can I skip a payment this month?"
-}

@@ -28,19 +28,19 @@ class RouterLiveTests {
 
     @Test
     void jevSendsACardFaqToLuna() throws Exception {
-        route("How do I freeze my debit card?").andExpect(jsonPath("$.jevPick").value("LUNA"));
+        route("How do I freeze my debit card?").andExpect(jsonPath("$.tier").value("LUNA"));
     }
 
     @Test
     void jevSendsADuplicateChargeToSol() throws Exception {
         route("I was charged twice at Acme Coffee on October 5. Can you check?")
-                .andExpect(jsonPath("$.jevPick").value("SOL"));
+                .andExpect(jsonPath("$.tier").value("SOL"));
     }
 
     @Test
     void jevSendsHardshipToAstra() throws Exception {
         route("I lost my job and can't make my mortgage payment this month. What can I do?")
-                .andExpect(jsonPath("$.jevPick").value("ASTRA"));
+                .andExpect(jsonPath("$.tier").value("ASTRA"));
     }
 
     @Test

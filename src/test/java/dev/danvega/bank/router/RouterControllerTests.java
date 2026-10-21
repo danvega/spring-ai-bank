@@ -60,7 +60,6 @@ class RouterControllerTests {
                 .andExpect(jsonPath("$.routing.tier").value("LUNA"))
                 .andExpect(jsonPath("$.routing.model").value("gpt-6-luna"))
                 .andExpect(jsonPath("$.routing.confidence").value(0.92))
-                .andExpect(jsonPath("$.routing.probabilities.SOL").value(0.06))
                 .andExpect(jsonPath("$.routing.gate").value("EXECUTE"))
                 .andExpect(jsonPath("$.answer").value("Open the app, tap your card, then tap Freeze."));
 
@@ -88,7 +87,7 @@ class RouterControllerTests {
         chat(HARDSHIP).andExpect(status().isOk())
                 .andExpect(jsonPath("$.routing.tier").value("ASTRA"))
                 .andExpect(jsonPath("$.routing.model").value("gpt-6-astra"))
-                .andExpect(jsonPath("$.routing.reason").value("Jev picked ASTRA at 0.95. Sure enough, so ASTRA answers."));
+                .andExpect(jsonPath("$.routing.gate").value("EXECUTE"));
 
         assertThat(modelSentToOpenAi()).isEqualTo("gpt-6-astra");
     }
@@ -99,10 +98,8 @@ class RouterControllerTests {
         openAi.replyWithText("Let's look at your options together.");
 
         chat("Can I skip a payment this month?").andExpect(status().isOk())
-                .andExpect(jsonPath("$.routing.jevPick").value("SOL"))
                 .andExpect(jsonPath("$.routing.gate").value("ESCALATE"))
-                .andExpect(jsonPath("$.routing.tier").value("ASTRA"))
-                .andExpect(jsonPath("$.routing.reason").value("Jev picked SOL at 0.48. Below the 0.60 floor, so ASTRA answers."));
+                .andExpect(jsonPath("$.routing.tier").value("ASTRA"));
 
         assertThat(modelSentToOpenAi()).isEqualTo("gpt-6-astra");
     }
@@ -113,12 +110,10 @@ class RouterControllerTests {
         openAi.replyWithText("A late payment fee is $25.");
 
         chat("What's the fee if I pay my card late?").andExpect(status().isOk())
-                .andExpect(jsonPath("$.routing.jevPick").value("LUNA"))
                 .andExpect(jsonPath("$.routing.gate").value("CONFIRM"))
-                .andExpect(jsonPath("$.routing.tier").value("SOL"))
-                .andExpect(jsonPath("$.routing.reason").value("Jev picked LUNA at 0.72. LUNA needs 0.80, so SOL answers."));
+                .andExpect(jsonPath("$.routing.tier").value("ASTRA"));
 
-        assertThat(modelSentToOpenAi()).isEqualTo("gpt-6.1-sol");
+        assertThat(modelSentToOpenAi()).isEqualTo("gpt-6-astra");
     }
 
     @Test
@@ -129,8 +124,7 @@ class RouterControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tier").value("ASTRA"))
                 .andExpect(jsonPath("$.model").value("gpt-6-astra"))
-                .andExpect(jsonPath("$.confidence").value(0.95))
-                .andExpect(jsonPath("$.probabilities.LUNA").value(0.01));
+                .andExpect(jsonPath("$.confidence").value(0.95));
 
         assertThat(jev.requests()).hasSize(1);
         assertThat(openAi.requests()).isEmpty();

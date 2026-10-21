@@ -34,8 +34,4 @@ public enum ModelTier {
         return description;
     }
 
-    public ModelTier stronger() {
-        return this == ASTRA ? ASTRA : values()[ordinal() + 1];
-    }
-
 }

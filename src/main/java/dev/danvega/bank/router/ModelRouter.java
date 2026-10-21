@@ -1,7 +1,5 @@
 package dev.danvega.bank.router;
 
-import java.util.Locale;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springaicommunity.typesafe.TypeSafeClient;
@@ -51,25 +49,12 @@ public class ModelRouter {
 
         ModelTier pick = ModelTier.valueOf(answer.value());
         Decision gate = GATE.decide(answer);
-        ModelTier tier = switch (gate) {
-            case EXECUTE -> pick;
-            case CONFIRM -> pick.stronger();
-            case ESCALATE -> ModelTier.ASTRA;
-        };
+        // Not sure enough? Use the strongest model.
+        ModelTier tier = gate == Decision.EXECUTE ? pick : ModelTier.ASTRA;
 
         log.info("Jev {} (request {}) picked {} at {}. Gate: {}. {} answers.",
                 response.model(), response.requestId(), pick, answer.confidence(), gate, tier);
-        return new RoutingDecision(tier, tier.modelId(), answer.confidence(), answer.probabilities(),
-                pick, gate, reason(pick, answer.confidence(), gate, tier));
-    }
-
-    private static String reason(ModelTier pick, double confidence, Decision gate, ModelTier tier) {
-        String why = switch (gate) {
-            case EXECUTE -> "Sure enough";
-            case CONFIRM -> String.format(Locale.ROOT, "%s needs %.2f", pick, GATE.requiredFor(pick.name()));
-            case ESCALATE -> String.format(Locale.ROOT, "Below the %.2f floor", GATE.floor());
-        };
-        return String.format(Locale.ROOT, "Jev picked %s at %.2f. %s, so %s answers.", pick, confidence, why, tier);
+        return new RoutingDecision(tier, tier.modelId(), answer.confidence(), gate);
     }
 
 }
