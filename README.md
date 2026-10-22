@@ -2,7 +2,7 @@
 
 A small, made-up bank that shows Spring AI 2 at work. Each demo adds one feature to the same app, on its own branch. `main` has all of them.
 
-This is the demo app for the talk "What's New in Spring AI 2.x: Putting AI to Work in Your Applications" (October 22, 2026).
+This is the demo app for the talk "What's New in Spring AI 2.x: Putting AI to Work in Your Applications" (October 22, 2026). The slides are in [slides/whats-new-spring-ai-2.pdf](slides/whats-new-spring-ai-2.pdf).
 
 ## The demos
 
@@ -18,7 +18,7 @@ Each demo has an IntelliJ HTTP client file in [http](http), numbered in the same
 
 ## Run it
 
-You need JDK 21 or newer, an OpenAI API key, and a TypeSafe API key for demo 5 (any value works if you skip it).
+You need JDK 21 or newer, an OpenAI API key, and a TypeSafe API key for demo 4 (any value works if you skip it).
 
 ```bash
 export OPENAI_API_KEY=your-openai-key
