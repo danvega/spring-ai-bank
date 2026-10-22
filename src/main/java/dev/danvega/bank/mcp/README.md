@@ -57,23 +57,31 @@ npx -y @modelcontextprotocol/inspector@2.10.1 --cli http://localhost:8099/mcp --
 
 ## Use it from Claude Code
 
-Add the server once, while the app is running:
+1. Start the app (`./mvnw spring-boot:run`).
+2. From the `spring-ai-bank` folder, add the server once:
+
+   ```bash
+   claude mcp add --transport http bank http://localhost:8099/mcp
+   ```
+
+   This uses local scope, so Claude Code only loads it when you start `claude` in this folder. You can add it before the app is running. It shows "Failed to connect" until the app is up.
+3. Start `claude` in the same folder and run `/mcp`. `bank` should show as connected.
+
+Then ask, in plain English. Claude Code asks before it calls a tool for the first time.
+
+| Ask | What you should see |
+|---|---|
+| "Show open disputes over $500." | D-1001 (Skyline Airlines, $1,240) and D-1002 (Luxe Furniture, $2,150), from `findDisputes` |
+| "Did customer C-100 get charged twice anywhere?" | The duplicate Acme Coffee charge, from `findDuplicateCharges` |
+| "Propose a dispute for C-100's second Acme Coffee charge." | D-1005 with status `PENDING_CONFIRMATION`, from `proposeDispute` |
+| "Now confirm that dispute." | Claude can't. There's no tool for it. Only the customer confirms, in the app. |
+
+The data lives in memory, so restart the app to get D-1005 again.
+
+Remove the server when you're done:
 
 ```bash
-claude mcp add --transport http bank http://localhost:8099/mcp
-```
-
-Start `claude` and check it with `/mcp`. Then ask, in plain English:
-
-- "Show open disputes over $500."
-- "Did customer C-100 get charged twice anywhere?"
-- "Propose a dispute for C-100's second Acme Coffee charge."
-- "Now confirm that dispute." Claude has no tool for that, so it can't. Only the customer confirms, in the app.
-
-Remove it when you're done:
-
-```bash
-claude mcp remove bank
+claude mcp remove bank -s local
 ```
 
 ## Good to know
